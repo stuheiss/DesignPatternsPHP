@@ -7,3 +7,6 @@ _build/
 .vagrant/
 phpunit.xml
 composer.phar
+tests/_output/*
+tests/_output/*
+tests/_output/*tests/

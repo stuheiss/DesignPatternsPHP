@@ -28,13 +28,17 @@ Vagrant.configure("2") do |config|
         v.customize [
             "modifyvm", :id,
             "--name", "design-patterns",
-            "--memory", 512,
+            "--memory", 1024,
             "--natdnshostresolver1", "on",
             "--cpus", 1,
         ]
     end
 
-    config.vm.box = "ubuntu/trusty64"
+    #config.vm.box = "ubuntu/trusty64"
+    config.vm.box = "base"
+    config.vm.box_url = "https://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140504.box"
+    #config.vm.box_url = "https://atlas.hashicorp.com/puppetlabs/boxes/centos-6.6-64-puppet/versions/1.0.2"
+
 
     config.vm.network :private_network, ip: "192.168.11.2"
     config.ssh.forward_agent = true
@@ -44,16 +48,18 @@ Vagrant.configure("2") do |config|
     #############################################################
 
 
-    if which('ansible-playbook')
-        config.vm.provision "ansible" do |ansible|
-            ansible.playbook = "ansible/playbook.yml"
-            ansible.inventory_path = "ansible/inventories/dev"
-            ansible.limit = 'all'
-        end
-    else
-        config.vm.provision :shell, path: "ansible/windows.sh", args: ["default"]
-    end
+    #if which('ansible-playbook')
+    #    config.vm.provision "ansible" do |ansible|
+    #        ansible.playbook = "ansible/playbook.yml"
+    #        ansible.inventory_path = "ansible/inventories/dev"
+    #        ansible.limit = 'all'
+    #    end
+    #else
+    #    config.vm.provision :shell, path: "ansible/windows.sh", args: ["default"]
+    #end
+
+    config.vm.provision :shell, path: "bootstrap.sh", args: ["default"]
 
 
-    config.vm.synced_folder "./", "/vagrant", type: "nfs"
+    config.vm.synced_folder ".", "/vagrant", type: "nfs"
 end
